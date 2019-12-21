@@ -23,8 +23,10 @@ def webhooks_trigger(event):
     r.raise_for_status()
 
 @application.route("/")
-def hello():
-    return {"Hello": "World!"}
+def root():
+    return f"""On slots: {{{slot.active for slot in scheduler._on_slots}}}
+    lights: {scheduler._lights.on}
+    """
 
 class Lights:
     def __init__(self):
@@ -63,7 +65,7 @@ class Sun:
     >>> up = sun.up
     """
     def __init__(self, location):
-        load = Loader('~/skyfield-data')
+        load = Loader('skyfield-data')
         self._ts = load.timescale()
         planets = load('de421.bsp')
         loc = Topos(*location)

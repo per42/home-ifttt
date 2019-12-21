@@ -1,3 +1,11 @@
 .venv/
 .vscode/settings.json
 *.pyc
+
+# Generated on first run
+skyfield-data/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
