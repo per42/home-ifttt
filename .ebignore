@@ -1,3 +1,9 @@
+.ebignore
+.elasticbeanstalk
+.git
+.gitignore
 LICENSE
 __pycache__
 README.md
+.venv
+.vscode

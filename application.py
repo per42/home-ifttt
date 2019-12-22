@@ -1,5 +1,6 @@
 import os
 from flask import Flask, request
+from flask_json import FlaskJSON, JsonError, json_response, as_json
 import requests
 from queue import Queue
 from threading import Event, Lock, Thread
@@ -11,15 +12,25 @@ import numpy as np
 
 
 application = Flask(__name__)
+json = FlaskJSON(application)
 
 WEBHOOKS_HOST = 'maker.ifttt.com'
 WEBHOOKS_KEY = os.environ['WEBHOOKS_KEY']
 
 LIGHT_DURATION = 300
 
-def webhooks_trigger(event):
-    application.logger.debug(f"Webhooks trigger {event}")
-    r = requests.get(f"https://{WEBHOOKS_HOST}/trigger/{event}/with/key/{WEBHOOKS_KEY}")
+def webhooks_trigger(event, value1=None, value2=None, value3=None):
+    application.logger.debug(f"Webhooks trigger {event}({value1}, {value2}, {value3})")
+    data = {}
+    if value1 is not None:
+        data['value1'] = value1
+    if value2 is not None:
+        data['value2'] = value2
+    if value3 is not None:
+        data['value3'] = value3
+    if len(data):
+        data=None
+    r = requests.get(f"https://{WEBHOOKS_HOST}/trigger/{event}/with/key/{WEBHOOKS_KEY}", json=data)
     r.raise_for_status()
 
 @application.route("/")
@@ -178,12 +189,11 @@ def webhooks_arlo(event, device):
 
 loopback_complete = Queue()
 @application.route("/trigger_loopback")
+@as_json
 def trigger_loopback():
     application.logger.info(f"trigger_loopback: {request}:{request.args}")
     start = time()
-    r = requests.get(trigger_url('loopback'), json={f'value{i}': request.args.get(f'value{i}', i) for i in [1, 2, 3]})
-    application.logger.info(f"{r}, {r.text}")
-    r.raise_for_status()
+    webhooks_trigger('loopback', **{f'value{i}': request.args.get(f'value{i}', i) for i in [1, 2, 3]})
     response = loopback_complete.get(timeout=10.0)
     response['round trip'] = time() - start
     return response

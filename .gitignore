@@ -1,5 +1,6 @@
 .venv/
 .vscode/settings.json
+.vscode/tags
 *.pyc
 
 # Generated on first run
