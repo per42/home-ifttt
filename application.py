@@ -136,7 +136,7 @@ class TimeSlot:
 
     @property
     def active(self):
-        return self.within(datetime.today())
+        return self.within(datetime.utcnow())
 
 
 class Scheduler(Thread):
@@ -163,8 +163,8 @@ class Scheduler(Thread):
             if on_slot.active:
                 application.logger.debug(f"on slot active")
                 on = True
-        if self._greet_until is not None and datetime.today() < self._greet_until:
-            application.logger.debug(f"{datetime.today()} < {self._greet_until}")
+        if self._greet_until is not None and datetime.utcnow() < self._greet_until:
+            application.logger.debug(f"{datetime.utcnow()} < {self._greet_until}")
             on = True
         if self._sun.up:
             application.logger.debug(f"Sun up")
@@ -173,12 +173,12 @@ class Scheduler(Thread):
 
 
     def greet(self, duration: timedelta):
-        self._greet_until = datetime.today() + duration
+        self._greet_until = datetime.utcnow() + duration
         self._dirty.set()
 
 
 LOCATION = os.environ['LOCATION'].split(':')
-scheduler = Scheduler(Sun(LOCATION), {TimeSlot('06:00', '23:00')})
+scheduler = Scheduler(Sun(LOCATION), {TimeSlot('05:00', '22:00')})
 scheduler.start()
 
 @application.route("/webhooks/arlo/<event>/<device>")
