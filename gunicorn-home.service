@@ -1,0 +1,11 @@
+[Unit]
+Description=Home IFTTT
+
+[Service]
+Type             = simple
+WorkingDirectory = /home/pi/code/home-ifttt/
+EnvironmentFile  = /home/pi/code/home-ifttt/environment
+ExecStart        = /home/pi/code/home-ifttt/.venv/bin/gunicorn --workers=1 application:application
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,17 @@
+[build-system]
+requires         = ["flit_core >= 2, < 4"]
+build-backend    = "flit_core.buildapi"
+
+[tool.flit.metadata]
+dist-name        = "home-ifttt"
+author           = "Per Rosengren"
+author-email     = "per.rosengren@gmail.com"
+requires-python  = "~=3.6"
+requires         = [
+    "Flask      == 1.0.2",
+    "Flask-JSON == 0.3.4",
+    "requests   == 2.20.1",
+    "skyfield   == 1.16",
+    "paho-mqtt  == 1.5.0"
+]
+module           = "application"
