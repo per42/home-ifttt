@@ -1,4 +1,4 @@
-Flask==1.0.2
+Flask==2.3.2
 Flask-JSON==0.3.4
 requests==2.20.1
 skyfield==1.16
